@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ATM Simulator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .atm-container {
+      background: #333;
+      padding: 30px;
+      width: 350px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px #000;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 90%;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+
+    input {
+      text-align: center;
+    }
+
+    button {
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    #menu, #actions {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="atm-container">
+    <h2>ATM Simulator</h2>
+
+    <div id="login">
+      <p>Enter PIN</p>
+      <input type="password" id="pin" maxlength="4" placeholder="****">
+      <button onclick="login()">Login</button>
+      <p id="login-error" style="color: red;"></p>
+    </div>
+
+    <div id="menu">
+      <p>Welcome!</p>
+      <button onclick="showAction('balance')">Check Balance</button>
+      <button onclick="showAction('deposit')">Deposit</button>
+      <button onclick="showAction('withdraw')">Withdraw</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+
+    <div id="actions">
+      <div id="balance" class="action">
+        <h3>Your Balance: ₹<span id="balanceAmount">0</span></h3>
+      </div>
+
+      <div id="deposit" class="action">
+        <h3>Deposit Amount</h3>
+        <input type="number" id="depositAmount" placeholder="Enter amount">
+        <button onclick="deposit()">Deposit</button>
+      </div>
+
+      <div id="withdraw" class="action">
+        <h3>Withdraw Amount</h3>
+        <input type="number" id="withdrawAmount" placeholder="Enter amount">
+        <button onclick="withdraw()">Withdraw</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let balance = 5000;
+    const correctPIN = "1234";
+
+    function login() {
+      const pinInput = document.getElementById("pin").value;
+      if (pinInput === correctPIN) {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("menu").style.display = "block";
+        document.getElementById("actions").style.display = "block";
+        document.getElementById("login-error").textContent = "";
+      } else {
+        document.getElementById("login-error").textContent = "Incorrect PIN!";
+      }
+    }
+
+    function showAction(actionId) {
+      const actions = document.querySelectorAll(".action");
+      actions.forEach(a => a.style.display = "none");
+      document.getElementById(actionId).style.display = "block";
+      if (actionId === "balance") {
+        document.getElementById("balanceAmount").textContent = balance;
+      }
+    }
+
+    function deposit() {
+      const amount = parseFloat(document.getElementById("depositAmount").value);
+      if (amount > 0) {
+        balance += amount;
+        alert("₹" + amount + " deposited successfully!");
+        document.getElementById("depositAmount").value = "";
+        showAction('balance');
+      } else {
+        alert("Enter a valid amount!");
+      }
+    }
+
+    function withdraw() {
+      const amount = parseFloat(document.getElementById("withdrawAmount").value);
+      if (amount > 0 && amount <= balance) {
+        balance -= amount;
+        alert("₹" + amount + " withdrawn successfully!");
+        document.getElementById("withdrawAmount").value = "";
+        showAction('balance');
+      } else {
+        alert("Insufficient balance or invalid amount!");
+      }
+    }
+
+    function logout() {
+      document.getElementById("menu").style.display = "none";
+      document.getElementById("actions").style.display = "none";
+      document.getElementById("login").style.display = "block";
+      document.getElementById("pin").value = "";
+    }
+  </script>
+</body>
+</html>
